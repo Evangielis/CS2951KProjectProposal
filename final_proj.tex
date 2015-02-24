@@ -1,0 +1,83 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage[margin=3cm]{geometry}
+\usepackage{courier}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.1in}
+
+
+\begin{document}
+\title{Emotion through Intel RealSense\\ \vspace{2 mm} {\large CS2951K Final Project Proposal}\\ {\large Ning Hou (nhou)}}
+
+\maketitle
+%\begin{center}Team member: Ning Hou (nhou)\end{center}
+
+\section{Research question}
+How facial expression convey implicit message and influence the explicit message received?
+
+\section{Significance}
+\begin{itemize}
+\item Adjust the machine strategy/action accordingly. 
+
+For example, strong negative emotion would trigger error detection/correction mechanism; faster convergence in computation to give back prompt feedback; alternative strategy in search space or algorithm for the solution.
+
+\item Alarm and report emergency for drivers, employees and patients.
+
+\item Improve user experience. The robots are more than our workers; they can be truly thoughtful and understanding companions.
+\end{itemize}
+
+\section{Methodology}
+
+
+
+\subsection{How to solve the problem?}
+
+\begin{enumerate}
+\item Obtain facial expression data from Intel RealSense.
+\item Construct POMDP model for emotion, action and transition.
+\item Solve the decision problem using Bayes filter.
+\item Test the model by user input from class and friends.
+\item Adjust and formalize the model. 
+\end{enumerate}
+
+\subsection{How to know if we have solved the problem?}
+\emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
+
+\emph{Milestone 2.} Formalized POMDP model that outputs decision from input user expression and inferred emotion.
+
+\emph{Milestone 3.} Extensive testing (hoping) to justify the performance of Intel RealSense emtion inference, our POMDP model and the output decision.
+
+\emph{Final results.} We have solved the problem if testing indicates that we can make satisfiable decision given user input facial expression and commands. 
+\section{Related Work}
+
+
+
+\newpage
+\section{Schedule}
+
+\begin{center}
+\begin{tabular}{ c | c }
+\bf{Date} & \bf{TODO} \\ \hline
+2/26 - 3/5 &  \\
+3/6 - 3/12 &  Milestone 1\\
+3/13 - 3/19 &  \\
+3/20 - 3/26 &  Milestone 2\\
+3/27 - 4/2 &  \\
+4/2 - 4/7 & Checkpoint presentation\\
+4/8 - 4/14 & Milestone 3\\
+4/15 - 4/21 & Prepare results\\
+4/23 - 4/28 & Final presentation
+\end{tabular}
+\end{center}
+
+\section{Bibliography}
+
+
+\end{document}
