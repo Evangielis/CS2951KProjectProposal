@@ -34,27 +34,25 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 
 \section{Methodology}
 %\subsection{How to solve the problem?}
-We plan to formulate the problem at the highest level as both a multimodal bayes filter and a neural network where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  We will also compile a corpus of training and testing data 
+We plan to formulate the problem at the highest level as both a multimodal bayes filter and a neural network where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  We will also compile a corpus of training and testing data by interviewing 10-20 subjects about topics designed to elicit emotional experiences and recording the results using the RealSense device.  If after a few trials this fails to yield useful data we will revert to a backup plan, generating data by recording individuals watching samples of audio-visual media designed to elicit emotional responses.\\ \\
 
-%\begin{enumerate}
-%\item Obtain facial expression data from Intel RealSense.
-%\item Construct POMDP model for emotion, action and transition.
-%\item Solve the decision problem using Bayes filter.
-%\item Test the model by user input from class and friends.
-%\item Adjust and formalize the model. 
-%\end{enumerate}
+\begin{enumerate}
+\item Set up method of obtaining facial expressive, gestural and vocal data from Intel RealSense.
+\item Construct parallel Bayes filter and neural network models for determining affect.
+\item Solve the decision problem using Bayes filter and neural network.
+\item Test the model by user input using data set.
+\item Adjust and formalize the model based on results.
+\end{enumerate}
 
-\subsection{How to know if we have solved the problem?}
-\emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
+%\subsection{How to know if we have solved the problem?}
+%\emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
+%\emph{Milestone 2.} Formalized POMDP model that outputs decision from input user expression and inferred emotion.
+%\emph{Milestone 3.} Extensive testing (hoping) to justify the performance of Intel RealSense emtion inference, our POMDP model and the output decision.
+%\emph{Final results.} We have solved the problem if testing indicates that we can make satisfiable decision given user input facial expression and commands. 
+%\section{Related Work}
 
-\emph{Milestone 2.} Formalized POMDP model that outputs decision from input user expression and inferred emotion.
-
-\emph{Milestone 3.} Extensive testing (hoping) to justify the performance of Intel RealSense emtion inference, our POMDP model and the output decision.
-
-\emph{Final results.} We have solved the problem if testing indicates that we can make satisfiable decision given user input facial expression and commands. 
 \section{Related Work}
-
-
+Kapoor et al \cite{kapoor2001towards} describes a theoretic framework used to describe affective states.  Our work borrows from this idea but is generalized rather than focused on the activity of learning.
 
 \newpage
 \section{Schedule}
@@ -62,23 +60,22 @@ We plan to formulate the problem at the highest level as both a multimodal bayes
 \begin{center}
 \begin{tabular}{ c | c }
 \bf{Date} & \bf{TODO} \\ \hline
-2/26 - 3/5 &  \\
-3/6 - 3/12 &  Milestone 1\\
-3/13 - 3/19 &  \\
-3/20 - 3/26 &  Milestone 2\\
-3/27 - 4/2 &  \\
+2/26 - 3/5 & Finalize theoretic framework and experiment design\\
+3/6 - 3/12 & Program initial models and test with false data\\
+3/13 - 3/19 & Design interview script and post interview survey, find interview subjects and schedule\\
+3/20 - 3/26 & Have at least 10 subjects interviewed with collected data or move to backup plan\\
+3/27 - 4/2 & Test data on models and compare\\
 4/2 - 4/7 & Checkpoint presentation\\
-4/8 - 4/14 & Milestone 3\\
+4/8 - 4/14 & Collect more data as needed; tweak models\\
 4/15 - 4/21 & Prepare results\\
 4/23 - 4/28 & Final presentation
 \end{tabular}
 \end{center}
 
-\section{Bibliography}
+\section{Responsibilities}
+Everyone will have involvement with all parts of the project.  We will assign work based on what is needed to meet milestones.
 
-
-
-
+%\section{Bibliography}
 \bibliographystyle{plain}
 \bibliography{final_proj}
 

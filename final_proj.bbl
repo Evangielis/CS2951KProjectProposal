@@ -1,5 +1,17 @@
 \begin{thebibliography}{1}
 
+\bibitem{kapoor2001towards}
+Ashish Kapoor, Selene Mota, and Rosalind~W Picard.
+\newblock Towards a learning companion that recognizes affect.
+\newblock In {\em AAAI Fall symposium}, pages 2--4, 2001.
+
+\bibitem{liu2007affect}
+Changchun Liu, Karla Conn, Nilanjan Sarkar, and Wendy Stone.
+\newblock Affect recognition in robot assisted rehabilitation of children with
+  autism spectrum disorder.
+\newblock In {\em Robotics and Automation, 2007 IEEE International Conference
+  on}, pages 1755--1760. IEEE, 2007.
+
 \bibitem{pantic2005affective}
 Maja Pantic, Nicu Sebe, Jeffery~F Cohn, and Thomas Huang.
 \newblock Affective multimodal human-computer interaction.

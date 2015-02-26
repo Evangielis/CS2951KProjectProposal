@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2014.10.24)  25 FEB 2015 21:02
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2014.10.24)  26 FEB 2015 02:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -252,18 +252,33 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 
 LaTeX Warning: No \author given.
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
+
+ []
+
 [1
 
-] [2] (./final_proj.bbl) 
+] [2]
+Overfull \hbox (85.63156pt too wide) in paragraph at lines 61--73
+ [] 
+ []
+
+(./final_proj.bbl) 
 AED: lastpage setting LastPage
 [3] (./final_proj.aux) ) 
 Here is how much of TeX's memory you used:
- 1990 strings out of 493494
- 24969 string characters out of 3143819
- 82812 words of memory out of 3000000
- 5278 multiletter control sequences out of 15000+200000
- 13740 words of font info for 55 fonts, out of 3000000 for 9000
+ 1991 strings out of 493494
+ 24986 string characters out of 3143819
+ 83818 words of memory out of 3000000
+ 5279 multiletter control sequences out of 15000+200000
+ 13433 words of font info for 54 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 27i,6n,43p,901b,192s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,43p,801b,192s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on final_proj.dvi (3 pages, 4712 bytes).
+Output written on final_proj.dvi (3 pages, 6508 bytes).
