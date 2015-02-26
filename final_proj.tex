@@ -20,7 +20,7 @@
 %\begin{center}Team member: Ning Hou (nhou)\end{center}
 
 \section{Research question}
-Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  Some cues are objective (e.g. smiling indicating happiness) while others may be more subjective (e.g. rubbing hands together when anxious).  We are interested if a multimodal framework may be used to first learn parameters representing an individual's peculiarities of affect and then estimate that person's affect.
+Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  In their recommendations on affective multimodal HCI, Pantic et al \cite[p. 3]{pantic2005affective} suggest that
 
 \section{Significance}
 Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would computers to interact more effectively with humans in tasks where emotion has an impact, learning or driving for example.  Part of the problem with infering affect is based in technological limitations which we hope to address using Intel's RealSense technology.  Another part of the problem is that individual users introduce noise into their affective display in the form of nervous tics, cultural differences and other pecularities.  An example of this can be seen with autism which changes the affective display of the individual away from expected norms.  Finding a method to calibrate affect detection for individuals would allow intelligence agents to tune themselves better to the needs of individual users.
@@ -34,7 +34,7 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 
 \section{Methodology}
 %\subsection{How to solve the problem?}
-We plan to formulate the problem at the highest level as a multimodal bayes filter where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  Each of the modes of input will have its own algorithm
+We plan to formulate the problem at the highest level as a multimodal bayes filter where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  Each of the modes of input will have its own algorithm with trainable parameters 
 
 %\begin{enumerate}
 %\item Obtain facial expression data from Intel RealSense.
@@ -76,5 +76,10 @@ We plan to formulate the problem at the highest level as a multimodal bayes filt
 
 \section{Bibliography}
 
+
+
+
+\bibliographystyle{plain}
+\bibliography{final_proj}
 
 \end{document}
