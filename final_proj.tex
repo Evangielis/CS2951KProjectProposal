@@ -33,18 +33,16 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 %\end{itemize}
 
 \section{Methodology}
+%\subsection{How to solve the problem?}
+We plan to formulate the problem at the highest level as a multimodal bayes filter where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  Each of the modes of input will have its own algorithm
 
-
-
-\subsection{How to solve the problem?}
-
-\begin{enumerate}
-\item Obtain facial expression data from Intel RealSense.
-\item Construct POMDP model for emotion, action and transition.
-\item Solve the decision problem using Bayes filter.
-\item Test the model by user input from class and friends.
-\item Adjust and formalize the model. 
-\end{enumerate}
+%\begin{enumerate}
+%\item Obtain facial expression data from Intel RealSense.
+%\item Construct POMDP model for emotion, action and transition.
+%\item Solve the decision problem using Bayes filter.
+%\item Test the model by user input from class and friends.
+%\item Adjust and formalize the model. 
+%\end{enumerate}
 
 \subsection{How to know if we have solved the problem?}
 \emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
