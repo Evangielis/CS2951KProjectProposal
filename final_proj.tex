@@ -20,10 +20,10 @@
 %\begin{center}Team member: Ning Hou (nhou)\end{center}
 
 \section{Research question}
-Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  In their recommendations on affective multimodal HCI, Pantic et al \cite[p.3]{pantic2005affective} suggest the use of an artificial neural network when infering affect with the rationale that some subtle cues are difficult to pick up via conventional analysis.  We are curious if this rationale holds; namely given a set of modes whether a multimodal bayes filter with analytically tuned parameters or a neural network provides more accurate results.
+Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  Cues such as facial expression, vocal prosody and gestural display are all modes by which the affective state of an individual can be inferred.  We are interested in exploring the efficacy of a multimodal Bayes filter when used to filter combined input from various modes into a probability whether a given subject is confused or not.  By confusion we mean the common definition where, given a situation, a person either understands it or is confused.  It is our contention that a multimodal approach will be much more effective than a single mode by itself.
 
 \section{Significance}
-Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would computers to interact more effectively with humans in tasks where emotion has an impact, learning or driving for example.  Part of the problem with infering affect is based in technological limitations which we hope to address using Intel's RealSense technology.  Properly trained, emotionally aware agents might even be able to pick up subtle shifts in affect that would elude the average human observer.  There has also been work in using affect aware agents as learning companions \cite{kapoor2001towards} and affect recognition in children with autism spectrum disorder \cite{liu2007affect}.
+Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would computers to interact more effectively with humans in tasks where emotion has an impact, learning or driving for example.  Confusion is especially significant during these tasks as it can actively interfere, or even be dangerous in the case of tasks such as driving.  Confusion serves intuitively as a natural perceptual feedback respresenting the efficacy of an intelligent agents communication attempts and could be incorporated as part of the reward function in a learning agent.  It is our more immediate hope that we can utilize work in this project to make Baxter aware of confusion in subjects with whom he is interacting.
 
 %\begin{itemize}
 %\item 
@@ -34,15 +34,20 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 
 \section{Methodology}
 %\subsection{How to solve the problem?}
-We plan to formulate the problem at the highest level as both a multimodal bayes filter and a neural network where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  We will also compile a corpus of training and testing data by interviewing 10-20 subjects about topics designed to elicit emotional experiences and recording the results using the RealSense device.  If after a few trials this fails to yield useful data we will revert to a backup plan, generating data by recording individuals watching samples of audio-visual media designed to elicit emotional responses.\\ \\
+We plan to formulate the problem at the highest level as a multimodal Bayes filter which returns a distribution on $P(confused | U)$ where $U$ is an evidence set of affective cues.  We plan initially focus on facial expression data, but given a relatively low accuracy reported from isolating modes (cite here) we feel it will be important to combine data from as many cues as possible.  Our corporae will be gathered by means of an automated quiz where a user sits down in front of a RealSense enabled computer and takes a short quiz of 10 questions designed to elicit both confusion and certainty.  After the quiz the subject will be asked to rate their experience with each question on a scale so as to establish a baseline from which we can derive ground truth.  Data from the RealSense device and end surveys will be recorded into a database during these quizzes.\\ \\
 
-\begin{enumerate}
-\item Set up method of obtaining facial expressive, gestural and vocal data from Intel RealSense.
-\item Construct parallel Bayes filter and neural network models for determining affect.
-\item Solve the decision problem using Bayes filter and neural network.
-\item Test the model by user input using data set.
-\item Adjust and formalize the model based on results.
-\end{enumerate}
+\section{Results}
+Data from testing will be processed through the Bayes filter with different combinations of modes active.  This will be compared against our collected ground truth data for each subject as a way of determining accuracy of the results.
+
+(table here)
+
+%\begin{enumerate}
+%\item Examine existing corporae to determine features which are representative of a confused state.
+%\item Setup recording on I
+%\item Solve the decision problem using Bayes filter and neural network.
+%\item Test the model by user input using data set.
+%\item Adjust and formalize the model based on results.
+%\end{enumerate}
 
 %\subsection{How to know if we have solved the problem?}
 %\emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
