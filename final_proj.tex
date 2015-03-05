@@ -8,6 +8,7 @@
 \usepackage{mathrsfs}
 \usepackage[margin=3cm]{geometry}
 \usepackage{courier}
+\usepackage{hyperref}
 
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
@@ -34,9 +35,73 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 
 \section{Methodology}
 %\subsection{How to solve the problem?}
-We plan to formulate the problem at the highest level as a multimodal Bayes filter which returns a distribution on $P(confused | U)$ where $U$ is an evidence set of affective cues.  We plan initially focus on facial expression data, but given a relatively low accuracy reported from isolating modes (cite here) we feel it will be important to combine data from as many cues as possible.  Our corporae will be gathered by means of an automated quiz where a user sits down in front of a RealSense enabled computer and takes a short quiz of 10 questions designed to elicit both confusion and certainty.  After the quiz the subject will be asked to rate their experience with each question on a scale so as to establish a baseline from which we can derive ground truth.  Data from the RealSense device and end surveys will be recorded into a database during these quizzes.\\ \\
+%We plan to formulate the problem at the highest level as a multimodal Bayes filter which returns a distribution on $P(confused | U)$ where $U$ is an evidence set of affective cues.  We plan initially focus on facial expression data, but given a relatively low accuracy reported from isolating modes (cite here) we feel it will be important to combine data from as many cues as possible.  Our corporae will be gathered by means of an automated quiz where a user sits down in front of a RealSense enabled computer and takes a short quiz of 10 questions designed to elicit both confusion and certainty.  After the quiz the subject will be asked to rate their experience with each question on a scale so as to establish a baseline from which we can derive ground truth.  Data from the RealSense device and end surveys will be recorded into a database during these quizzes.\\ \\
+
+
+\subsection{How to solve the problem?}
+
+\begin{itemize}
+\item[3.1.1.] Build up our corpus from online animated pictures displaying the facial expression of confusion. Given the feature vector $X$ that consists of the following elements to be measured in real time by the Intel RealSense face module:
+
+\begin{center}
+\begin{tabular}{ c | l}
+\emph{Brow} &	Raise left \\
+	&Raise right\\ 
+	&Lower left\\
+	&Lower right\\\hline
+\emph{Mouth}&	Smile\\
+	&Kiss\\
+	&Open\\\hline
+\emph{Head}	&Turn left\\
+	&Turn right\\
+	&Up\\
+	&Down\\
+	&Tilt left\\
+	&Tilt right\\\hline
+\emph{Eyes}	&Turn left\\
+	&Turn right\\
+	&Up\\
+	&Down\\
+\end{tabular}
+\\\vspace{7 mm} Table 1: Features from real-time user measurements
+\end{center}
+
+\item[3.1.2.]  Compute the probability of each element in our feature vector $\mathbf{P}(x|\text{confused})$ from an 
+\href{https://www.google.com/search?q=confused+gif&espv=2&biw=1121&bih=674&source=lnms&tbm=isch&sa=X&ei=NFn3VICgFYrEggSVxoKAAw&ved=0CAYQ_AUoAQ#tbm=isch&q=confusion+gif&revid=762198808}{online collection} of animated pictures displaying confusion. [TODO: more detailed math] We compute the conditional probability of being confused given each element $x$ using the Bayes' Rule:
+\begin{align}
+\mathbf{P}(\text{confused}|x) = \frac{\mathbf{P}(x|\text{confused})\mathbf{P}(\text{confused})}{\mathbf{P}(x)}
+\end{align}
+
+\item[3.1.3.]  Design an interactive survey, where each question is paired with a rating of how confusing the user thinks the question is. The user facial expression and gesture is monitored using Intel RealSense camera. We start with simple and clear question to calibrate the normal state of the user. Then for each question, given the user feature input, we output the probability of the user being confused real-time by equation (2). The user rating of level of confusion allows us to assess the performance of our Bayes filter. 
+
+\item[3.1.4.]  Let $X$ be input feature vector from real-time observation data. Given an estimated conditional probability of the user being confused computed or trained from our corpus, we output the probability as a normalized sum of conditional probabilities from our input feature vector:
+\begin{align}
+\mathbf{P}(\text{confused}) = \lambda \sum_{x \in X} \mathbf{P}(\text{confused}|x) 
+\end{align}
+
+\begin{center}
+\begin{tabular}{ p{8cm} | p{2cm} | p{2cm}}
+\bf{Question} & $\mathbf{P}(\text{confused})$ & User rating \\ \hline
+$1+1=?$ & 0 & 0\\
+\emph{Was chicken born first or egg born first?} & 0.8 & 0.7\\
+\emph{What does coffee smell like?} & 0.7 & 0.6\\
+$\ldots$ & &\\
+\emph{How many computers are there in the CIT?} & 1 & 1\\
+\end{tabular}
+\\\vspace{7 mm} Table 2: Preliminary result table
+\end{center}
+
+
+\item[3.1.5.]  More possible works:
+
+To improve the weighted sum in equation (2), assuming the users that we have surveyed in 3.1.3 are representative samples, we can use AdaBoost algorithm to improve the weights given to each element in the feature vector and re-evaluate the user inputs. 
+
+More modules that can be added into the feature vector include speech, pitch, body gesture, etc. We also hope to implement this experiment using neural network, and to compare the performance of the two with our user feedback. 
+\end{itemize}
 
 \section{Results}
+Preliminary result: Compare the user rating of confusion versus our estimated probability (Table 2). Based on how closely our estimated $\mathbf{P}(\text{confused})$ aligns with the user's actual state of confusion, we can assess our implementation. 
+
 Data from testing will be processed through the Bayes filter with different combinations of modes active.  This will be compared against our collected ground truth data for each subject as a way of determining accuracy of the results.
 
 (table here)
@@ -58,6 +123,12 @@ Data from testing will be processed through the Bayes filter with different comb
 
 \section{Related Work}
 Kapoor et al \cite{kapoor2001towards} describes a theoretic framework used to describe affective states.  Our work borrows from this idea but is generalized rather than focused on the activity of learning.
+
+
+In terms of building the corpus,  \href{http://www.pitt.edu/~jeffcohn/FinalReport_EAGER.pdf}{EAGER: Spontaneous 4D-Facial Expression Corpus for
+Automated Facial Image Analysis} and \href{http://membres-lig.imag.fr/adam/documents/LREC_Dynemo_MMC.pdf}{DYNEMO: A Corpus of dynamic and spontaneous emotional facial expressions } offer good examples.
+
+We refer to methods used in \href{http://dl.acm.org/citation.cfm?id=1027958}{Bimodal HCI-related Affect Recognition} for formalizing facial features extracted from Intel RealSense. 
 
 \newpage
 \section{Schedule}
