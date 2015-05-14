@@ -25,14 +25,14 @@
 %\begin{center}Team member: Ning Hou (nhou)\end{center}
 
 \section{Research question}
-Can we recognize confusion mental state from facial features? 
+Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  Cues such as facial expression, vocal prosody and gestural display are all modes by which the affective state of an individual can be inferred.  We are specifically interested in exploring the recognition of confusion in a person by means of their facial landmarks.  By confusion we mean the common definition of a mental state where, given a situation, a person either understands it or is confused.  We believe that there is a correlation between changes in a person's facial cues and the experience of confusion.
 
-Is there a correlation between confusion and other observable features through Intel RealSense, such as pulse and emotions?
-
-%\section{Significance}
-
+\section{Significance}
+Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would allow computers to interact more effectively with humans in tasks where emotion has an impact, for example learning or driving.  Confusion is especially significant during these tasks as it can actively interfere, or even be dangerous in the case of tasks such as operating heavy machinery.  Detecting confusion can also be a valuable aid in the diagnoses of medical conditions which may not be immediately obvious to the human observer.  Confusion also serves intuitively as a natural perceptual feedback respresenting the efficacy of an intelligent agent's communication attempts and could be incorporated as part of the reward function in a learning agent.  It is our more immediate hope that we can utilize work in this project to make a Baxter robot aware of confusion in subjects with whom it is interacting.
 
 \section{Methodology}
+In work establishing a framework for machine Emotional Intelligence, Picard et all \cite{picard2001toward} discuss factors which need to be considered when gathering data for experimental purposes.  For our experiment we are interested primarily in event-elicited emotions which arise unconsciously based on the situation.  To this end we have designed a quiz of five questions which are intended to provide a spectrum of data.  During the course of each question we collect a set of datapoints every 200 milliseconds using an Intel RealSense device which we have attached to a computer and pointed at the quizee.  This set includes 13 facial landmarks and 10 emotional features.  The facial landmarks are as follows: Left eyebrow raiser, Right eyebrow raiser, Left eyebrow lowerer, Right eyebrow lowerer, Mouth open, Mouth smile, Mouth kiss, Left eye closed, Right eye closed, Eyes turn left, Eyes turn right, Eyes turn up, Eyes turn down.
+
 \subsection{Confusion quiz}
 
 To capture the human facial and pulse response to mental state of confusion, we design a short quiz on a scale of questions from easy (less confusing) to hard (more confusing):
@@ -40,7 +40,7 @@ To capture the human facial and pulse response to mental state of confusion, we 
 \begin{enumerate}
 \item \emph{What is your name?}
 \begin{itemize}
-\item Use: Calibrate the neutral features. 
+\item Use: Calibrate neutral features. 
 \end{itemize}
  
 \item \emph{Who is the President of the United States?}
@@ -109,7 +109,7 @@ The dataset consists of two components to the confusion quiz questions in 3.1:
 \end{itemize}
 \end{enumerate}
 
-The facial landmarks that fit into the definition of action units have been denoted with [AU]. We could also consider the initial frames of neutral face as AU0. (Because mouth features do not overlap with AU definitions, we only use the feature names in our method. However, we include the AU notations here for future use and comparison with other facial action and emotion research.)
+The facial landmarks that fit into the definition of action units have been denoted with [AU]. We could also consider the initial frames of neutral face as AU0. (Because mouth features do not overlap with AU definitions, we only use the feature names in our method. However, we the AU notations here for future use and comparison with other facial action and emotion research.)
 
 %According to EMFACS (Emotional Facial Action Coding System) and FACSAID (Facial Action Coding System Affect Interpretation Dictionary), the seven primary emotions can be detected based on some combinations of action units. 
 
@@ -194,7 +194,7 @@ Mouth & Smile  &  &  & \\ \hline
 \end{center}
 
 \section{Tables and Figures}
-\includegraphics[scale=0.8]{sampleXML.png}
+%\includegraphics[scale=0.8]{sampleXML.png}
 \begin{center} Figure 1: Sample dataset taken at one 0.2 ms timestamp \end{center}
 %\section{Bibliography}
 \bibliographystyle{plain}
