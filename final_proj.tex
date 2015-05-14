@@ -33,7 +33,10 @@ Reliably determining user affect is an open problem in HCI and part of a field c
 \section{Methodology}
 In work establishing a framework for machine Emotional Intelligence, Picard et all \cite{picard2001toward} discuss factors which need to be considered when gathering data for experimental purposes.  For our experiment we are interested primarily in event-elicited emotions which arise unconsciously based on the situation.  To this end we have designed a quiz of five questions which are intended to provide a spectrum of data.  During the course of each question we collect a set of datapoints every 200 milliseconds using an Intel RealSense device which we have attached to a computer and pointed at the quizee.  This set includes 13 facial landmarks and 10 emotional features.  The facial landmarks are as follows: Left eyebrow raiser, Right eyebrow raiser, Left eyebrow lowerer, Right eyebrow lowerer, Mouth open, Mouth smile, Mouth kiss, Left eye closed, Right eye closed, Eyes turn left, Eyes turn right, Eyes turn up, Eyes turn down and their respective intensities from 0 to 100.  The emotional features are a set of 10 statistical features, each comprised of an intensity from 0 to 1 and an evidence rating ranging from -1 to 3.  These features include 7 specific emotions and 3 general valence ratings.  The 7 emotions are anger, contempt, disgust, fear, joy, sadness, and surprise and the valences are limited to positive, neutral and negative.  In addition to these 23 data points we included a single physiological sample in the form of a calculated heart rate.
 
-\subsection{Confusion quiz}
+\subsection{Interrater agreement}
+To establish ground truth we used interrater agreement.  Three separate raters viewed videos of the quiz sessions and labelled intervals where they felt the quiz-taker was confused.  If two or more raters agreed that a quizee was confused during any given 200ms sample then that frame was considered confusion-positive; otherwise it was confusion-negative.
+
+\subsection{Confusion eliciting quiz}
 
 To capture the human facial and pulse response to mental state of confusion, we design a short quiz on a scale of questions from easy (less confusing) to hard (more confusing):
 
@@ -90,7 +93,7 @@ The dataset consists of two components to the confusion quiz questions in 3.1:
 \item The intersection of annotated confusion frames forms the \begin{bf}baseline\end{bf} for confusion evaluation and inference.
 \end{itemize}
 
-\item The features detected by Intel RealSense built-in face tracking and emotion modules at 0.2 millisecond (ms) frame:
+\item The features detected by Intel RealSense built-in face tracking and emotion modules at each 200 millisecond (ms) frame:
 \begin{itemize}
 \item Pulse [in beats per minute (BPM)]
 \item Facial landmarks [on a scale of 0 to 100]: 
@@ -101,7 +104,7 @@ The dataset consists of two components to the confusion quiz questions in 3.1:
 \item Eyes: Turn left [AU/M61], Turn right [AU/M62], Up [AU63], Down [AU64]
 \end{itemize}
 
-\item Emotions [on a scale of -1 to 10]: 
+\item Emotions [on a scale of 0 to 1 with evidence ratings from -1 to 3]: 
 \begin{itemize}
 \item Primary: Anger, Contempt, Disgust, Fear, Joy, Sadness, Surprise
 \item Sentiments: Negative, Positive, Neutral
@@ -109,19 +112,18 @@ The dataset consists of two components to the confusion quiz questions in 3.1:
 \end{itemize}
 \end{enumerate}
 
-The facial landmarks that fit into the definition of action units have been denoted with [AU]. We could also consider the initial frames of neutral face as AU0. (Because mouth features do not overlap with AU definitions, we only use the feature names in our method. However, we the AU notations here for future use and comparison with other facial action and emotion research.)
+Some facial landmarks are synonymous with action units as defined by Tian et al \cite{tian2001recognizing}. Those have been denoted with the tag [AU]. We could also consider the initial frames of neutral face as AU0. Because mouth features do not overlap with AU definitions, we only use the feature names in our method. However, we the AU notations here for future use and comparison with other facial action and emotion research.  Also, according to EMFACS (Emotional Facial Action Coding System) and FACSAID (Facial Action Coding System Affect Interpretation Dictionary), the seven primary emotions can be detected based on some combinations of action units.  It is our current understanding that these methods are used by the Intel RealSense in encoding values for emotional evidence and intensity.
 
-%According to EMFACS (Emotional Facial Action Coding System) and FACSAID (Facial Action Coding System Affect Interpretation Dictionary), the seven primary emotions can be detected based on some combinations of action units. 
-
-Additionally, the datasets were collected in the same format under two scenarios: 
+Datasets were collected in the same format under but under two separate scenarios: 
 \begin{enumerate}
-\item Conversation: we asked the quiz questions to human subjects.
+\item Conversational: we asked the quiz questions to human subjects.
 \item Computerized test: the human subjects took the quiz on computer.
 \end{enumerate}
 
-
 \subsection{Naive Bayes}
-Considert the features conditionally independent and frames taken at every 0.2-ms timestamp independent inputs. We formulate the Naive Bayes classifier for confusion mental states: given the feature vector $X = {x_1, ... , x_{28}}$ consisting of the 28 features described in Section 3.2.2, we compute $P(\text{confusion}|X)$ by Bayes Rule:
+Given our task was simply to label frames either confusion-positive or confusion-negative we felt a simple Naive Bayes classifier to be a worthy attempt.  To that end we formulated a 'scaled' bayes classifier which uses partial counts scaled by intensity/evidence ratings for both parameter estimation and classification.  We detail this process below.
+
+Consider the features conditionally independent and frames taken at every 200 ms timestamp independent inputs. We formulate the Naive Bayes classifier for confusion mental states: given the feature vector $X = {x_1, ... , x_{28}}$ consisting of the 28 features described in Section 3.2.2, we compute $P(\text{confusion}|X)$ by Bayes Rule:
 \begin{align}
 P(\text{confusion}|X) &= \frac{P(\text{confusion}) P(X|\text{confusion}) }{P(X)} \\
 &\propto P(\text{confusion}) P(X|\text{confusion})
@@ -132,150 +134,73 @@ P(\text{confusion}|X) &\propto P(\text{confusion}) \prod_{i=1}^{28} P(x_i | \tex
 \end{align}
 where
 \begin{align}
-P(\text{confusion}) &= \frac{ \text{count of confusion frames} }{ \text{total number of frames} } \\
-P(x_i|\text{confusion}) &= \frac{ \text{count of feature $x_i$ in confusion class} }{ \text{total number of features in confusion class} } 
+P(\text{confusion}) &= \frac{ \text{intensity scaled count of confusion-positive frames} }{ \text{total number of frames * set of feature intensities} } \\
+P(x_i|\text{confusion}) &= \frac{ \text{intensity scaled count of feature $x_i$ in confusion class} }{ \text{total number of features in confusion class * feature intensity} } 
 \end{align}
 
-We plan to take questions $1,5,7,8$ of Section 3.1 as the training data to compute $P(\text{confusion}|X)$ and evaluate the performance on questions $2,3,4,6$ as testing data. 
-\subsection{Bayes Filter}
+Note that the asterisks above are dot products.  Also for the counting of emotional features we only included the feature data from a frame if the evidence rating was greater than 0.
 
-
+We took take questions $1,5,7,8$ of Section 3.1 as the training data to compute $P(\text{confusion}|X)$ and evaluate the performance on questions $2,3,4,6$ as testing data. 
 
 
 \section{Results}
 \subsection{Baseline}
-We form the baseline of confusion by taking the intersection of three independent set of annotated frames. The annotation is based on the 
+We form the baseline of confusion by taking the intersection of three independent sets of annotated frames. The annotation is based on the interrater agreement method established previously.  The intersection of this baseline set with the set of all frames represents the set of all confusion-positive frames.
 
-\begin{center} Table: Annotated frames labelled as confusion in our baseline
+We first attempted classification using the full set of all features, then isolated subsets of the features by either eliminating features intuitively or randomly.
 
-\begin{tabular}{ c | c }
-Subject & Confusion frames \\ \hline
-DK &  \\ \hline
-John & \\ \hline
-Nakul &  \\ \hline
-Paige &  \\ 
-\end{tabular}
-\end{center}
+%\begin{center} Table: Annotated frames labelled as confusion in our baseline
+%\begin{tabular}{ c | c }
+%Subject & Confusion frames \\ \hline
+%DK &  \\ \hline
+%John & \\ \hline
+%Nakul &  \\ \hline
+%Paige &  \\ 
+%\end{tabular}
+%\end{center}
 
 \subsection{Naive Bayes}
-\begin{center} Table: Discrimitive weights of confusion in each feature
+\begin{center} Table: Results for scaled Naive Bayes given subsets of data \\
+Unless otherwise stated the threshold for the posterior probability is .50
 
 \begin{tabular}{ c | c | c | c | c }
- & & Baseline & Naive Bayes & Bayes Filter\\ \hline
-Pulse &  &  &  & \\ \hline
-Brow & Raise left  &  &  & \\ \hline
-Brow & Raise right  &  &  & \\ \hline
-Brow & Lower left  &  &  & \\ \hline
-Brow & Lower right  &  &  & \\ \hline
-Mouth & Smile  &  &  & \\ \hline
-Mouth & Kiss  &  &  & \\ \hline
-Mouth & Open  &  &  & \\ \hline
-Mouth & Smile  &  &  & \\ \hline
-... &   &  &  & \\ 
+Feature Subset & Precision & Recall & Accuracy & Fscore\\ \hline
+All features & 0.208 & 0.362 & 0.495 & 0.265 \\ \hline
+All features (.70 threshold) & 0.218 & 0.166 & 0.641 & 0.188 \\ \hline
+All features (.80 threshold) & 0.251 & 0.126 & 0.686 & 0.168 \\ \hline
+All features (.90 threshold) & 0.300 & 0.089 & 0.719 & 0.138 \\ \hline
+Without pulse & 0.226 & 0.272 & 0.583 & 0.247 \\ \hline
+Random subset & 0.233 & 0.150 & 0.663 & 0.182 \\ \hline
+Without emotional features & 0.198 & 0.084 & 0.684 & 0.118 \\ \hline
 \end{tabular}
+
 \end{center}
 
+\subsection{Discussion}
+Our intial attempt at a classifier yielded underwhelming results.  We noted that as we increased the threshold generally accuracy increased as a result of more frames being classified as confusion-negative.  This is likely because confusion positive frames constituted a small set at best.
 
-\section{Schedule}
-
-\begin{center}
-\begin{tabular}{ l | p{8cm} }
-\bf{Date} & \bf{TODO} \\ \hline
-2/26 - 3/5 & Finalize theoretic framework and experiment design\\
-3/6 - 3/12 & Program initial models and test with false data\\
-3/13 - 3/19 & Design interview script and post interview survey. Find interview subjects and schedule\\
-3/20 - 3/26 & Have at least 10 subjects interviewed with collected data or move to backup plan\\
-3/27 - 4/2 & Test data on models and compare\\
-4/2 - 4/7 & Checkpoint presentation\\
-4/8 - 4/14 & Collect more data as needed. Adjust and formalize the model based on results\\
-4/15 - 4/21 & Prepare results\\
-4/23 - 4/28 & Final presentation
-\end{tabular}
-\end{center}
+%\section{Schedule}
+%
+%\begin{center}
+%\begin{tabular}{ l | p{8cm} }
+%\bf{Date} & \bf{TODO} \\ \hline
+%2/26 - 3/5 & Finalize theoretic framework and experiment design\\
+%3/6 - 3/12 & Program initial models and test with false data\\
+%3/13 - 3/19 & Design interview script and post interview survey. Find interview subjects and schedule\\
+%3/20 - 3/26 & Have at least 10 subjects interviewed with collected data or move to backup plan\\
+%3/27 - 4/2 & Test data on models and compare\\
+%4/2 - 4/7 & Checkpoint presentation\\
+%4/8 - 4/14 & Collect more data as needed. Adjust and formalize the model based on results\\
+%4/15 - 4/21 & Prepare results\\
+%4/23 - 4/28 & Final presentation
+%\end{tabular}
+%\end{center}
 
 \section{Tables and Figures}
 %\includegraphics[scale=0.8]{sampleXML.png}
-\begin{center} Figure 1: Sample dataset taken at one 0.2 ms timestamp \end{center}
+\begin{center} Figure 1: Sample dataset taken at one 200 ms timestamp \end{center}
 %\section{Bibliography}
 \bibliographystyle{plain}
 \bibliography{final_proj}
 
 \end{document}
-
-%Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  In their recommendations on affective multimodal HCI, Pantic et al \cite[p.3]{pantic2005affective} suggest the use of an artificial neural network when infering affect with the rationale that some subtle cues are difficult to pick up via conventional analysis.  We are curious if this rationale holds; namely given a set of modes whether a multimodal bayes filter with analytically tuned parameters or a neural network provides more accurate results.
-
-%Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would computers to interact more effectively with humans in tasks where emotion has an impact, learning or driving for example.  Part of the problem with infering affect is based in technological limitations which we hope to address using Intel's RealSense technology.  Properly trained, emotionally aware agents might even be able to pick up subtle shifts in affect that would elude the average human observer.  There has also been work in using affect aware agents as learning companions \cite{kapoor2001towards} and affect recognition in children with autism spectrum disorder \cite{liu2007affect}.
-
-%\begin{itemize}
-%\item 
-%For example, strong negative emotion would trigger error detection/correction mechanism; faster convergence in computation to give back prompt feedback; alternative strategy in search space or algorithm for the solution.
-%\item Alarm and report emergency for drivers, employees and patients.
-%\item Improve user experience. The robots are more than our workers; they can be truly thoughtful and understanding companions.
-%\end{itemize}
-
-
-
-
-%
-%\item[3.1.2.]  Compute the probability of each element in our feature vector $\mathbf{P}(x|\text{confused})$ from an 
-%\href{https://www.google.com/search?q=confused+gif&espv=2&biw=1121&bih=674&source=lnms&tbm=isch&sa=X&ei=NFn3VICgFYrEggSVxoKAAw&ved=0CAYQ_AUoAQ#tbm=isch&q=confusion+gif&revid=762198808}{online collection} of animated pictures displaying confusion. [TODO: more detailed math] We compute the conditional probability of being confused given each element $x$ using the Bayes' Rule:
-%\begin{align}
-%\mathbf{P}(\text{confused}|x) = \frac{\mathbf{P}(x|\text{confused})\mathbf{P}(\text{confused})}{\mathbf{P}(x)}
-%\end{align}
-%
-%\item[3.1.3.]  Design an interactive survey, where each question is paired with a rating of how confusing the user thinks the question is. The user facial expression and gesture is monitored using Intel RealSense camera. We start with simple and clear question to calibrate the normal state of the user. Then for each question, given the user feature input, we output the probability of the user being confused real-time by equation (2). The user rating of level of confusion allows us to assess the performance of our Bayes filter. 
-%
-%\item[3.1.4.]  Let $X$ be input feature vector from real-time observation data. Given an estimated conditional probability of the user being confused computed or trained from our corpus, we output the probability as a normalized sum of conditional probabilities from our input feature vector:
-%\begin{align}
-%\mathbf{P}(\text{confused}) = \lambda \sum_{x \in X} \mathbf{P}(\text{confused}|x) 
-%\end{align}
-
-%\begin{center}
-%\begin{tabular}{ p{8cm} | p{2cm} | p{2cm}}
-%\bf{Question} & $\mathbf{P}(\text{confused})$ & User rating \\ \hline
-%$1+1=?$ & 0 & 0\\
-%\emph{Was chicken born first or egg born first?} & 0.8 & 0.7\\
-%\emph{What does coffee smell like?} & 0.7 & 0.6\\
-%$\ldots$ & &\\
-%\emph{How many computers are there in the CIT?} & 1 & 1\\
-%\end{tabular}
-%\\\vspace{7 mm} Table 2: Preliminary result table
-%\end{center}
-
-Kapoor et al \cite{kapoor2001towards} describes a theoretic framework used to describe affective states.  Our work borrows from this idea but is generalized rather than focused on the activity of learning.
-
-In terms of building the corpus,  \href{http://www.pitt.edu/~jeffcohn/FinalReport_EAGER.pdf}{EAGER: Spontaneous 4D-Facial Expression Corpus for
-Automated Facial Image Analysis} and \href{http://membres-lig.imag.fr/adam/documents/LREC_Dynemo_MMC.pdf}{DYNEMO: A Corpus of dynamic and spontaneous emotional facial expressions } offer good examples.
-
-We refer to methods used in \href{http://dl.acm.org/citation.cfm?id=1027958}{Bimodal HCI-related Affect Recognition} for formalizing facial features extracted from Intel RealSense. 
-
-To improve the weighted sum in equation (2), assuming the users that we have surveyed in 3.1.3 are representative samples, we can use AdaBoost algorithm to improve the weights given to each element in the feature vector and re-evaluate the user inputs. 
-
-More modules that can be added into the feature vector include speech, pitch, body gesture, etc. We also hope to implement this experiment using neural network, and to compare the performance of the two with our user feedback. 
-
-
-
-%We plan to formulate the problem at the highest level as both a multimodal bayes filter and a neural network where the objects being filtered on are affective states treated as points in a multi-dimensional space where the dimensions are factors of affect (e.g. anxiety-confidence, boredom-facination).  We will also compile a corpus of training and testing data by interviewing 10-20 subjects about topics designed to elicit emotional experiences and recording the results using the RealSense device.  If after a few trials this fails to yield useful data we will revert to a backup plan, generating data by recording individuals watching samples of audio-visual media designed to elicit emotional responses.
-
-\subsection{How to know if we have solved the problem?}
-%\emph{Milestone 1.} 
-%
-%\emph{Milestone 2.} Construct parallel Bayes filter and neural network models for determining affect.
-%
-%\emph{Milestone 3.} Solve the decision problem using Bayes filter and neural network. Test the model by user input using data set.
-%
-%\emph{Final results.} Compare the user rating of confusion versus our estimated probability (Table 2).
-
-Preliminary result: Compare the user rating of confusion versus our estimated probability (Table 2). Based on how closely our estimated $\mathbf{P}(\text{confused})$ aligns with the user's actual state of confusion, we can assess our implementation. 
-
-
-
-TODO: 
-
-Given 3D face-only affect input, we predict the level of confusion of the user. 
-
--Some specific examples of the aspects of affect might be nice in your presentation 
-
--Perhaps tooling your affect spectrum towards some specific task would simplify collecting ground truth, and allow a you to phrase positive or negative affect in terms of success.
-
-Expand on the references
