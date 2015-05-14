@@ -8,78 +8,197 @@
 \usepackage{mathrsfs}
 \usepackage[margin=3cm]{geometry}
 \usepackage{courier}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{courier}
 
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
-
+\lstset{language=XML}
 
 \begin{document}
-\title{Emotion through Intel RealSense\\ \vspace{2 mm} {\large CS2951K Final Project Proposal}\\ {\large Ning Hou (nhou), Lee Painton, Eric Rosen}}
+\title{Confusion Mental State Inference \\through Intel RealSense\\ \vspace{2 mm} {\large CS2951K Final Project Proposal}\\ {\small Ning Hou, Lee Painton, Eric Rosen}}
 
 \maketitle
 %\begin{center}Team member: Ning Hou (nhou)\end{center}
 
 \section{Research question}
-Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  Cues such as facial expression, vocal prosody and gestural display are all modes by which the affective state of an individual can be inferred.  We are interested in exploring the efficacy of a multimodal Bayes filter when used to filter combined input from various modes into a probability whether a given subject is confused or not.  By confusion we mean the common definition where, given a situation, a person either understands it or is confused.  It is our contention that a multimodal approach will be much more effective than a single mode by itself.
+Affect display is the combination of facial, gestural and vocal cues by which persons consciously or unconsciously communicate emotion.  Cues such as facial expression, vocal prosody and gestural display are all modes by which the affective state of an individual can be inferred.  We are specifically interested in exploring the recognition of confusion in a person by means of their facial landmarks.  By confusion we mean the common definition of a mental state where, given a situation, a person either understands it or is confused.  We believe that there is a correlation between changes in a person's facial cues and the experience of confusion.
 
 \section{Significance}
-Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would computers to interact more effectively with humans in tasks where emotion has an impact, learning or driving for example.  Confusion is especially significant during these tasks as it can actively interfere, or even be dangerous in the case of tasks such as driving.  Confusion serves intuitively as a natural perceptual feedback respresenting the efficacy of an intelligent agents communication attempts and could be incorporated as part of the reward function in a learning agent.  It is our more immediate hope that we can utilize work in this project to make Baxter aware of confusion in subjects with whom he is interacting.
-
-%\begin{itemize}
-%\item 
-%For example, strong negative emotion would trigger error detection/correction mechanism; faster convergence in computation to give back prompt feedback; alternative strategy in search space or algorithm for the solution.
-%\item Alarm and report emergency for drivers, employees and patients.
-%\item Improve user experience. The robots are more than our workers; they can be truly thoughtful and understanding companions.
-%\end{itemize}
+Reliably determining user affect is an open problem in HCI and part of a field called affective computing.  The development of affect sensitive intelligent agents would allow computers to interact more effectively with humans in tasks where emotion has an impact, for example learning or driving.  Confusion is especially significant during these tasks as it can actively interfere, or even be dangerous in the case of tasks such as operating heavy machinery.  Detecting confusion can also be a valuable aid in the diagnoses of medical conditions which may not be immediately obvious to the human observer.  Confusion also serves intuitively as a natural perceptual feedback respresenting the efficacy of an intelligent agent's communication attempts and could be incorporated as part of the reward function in a learning agent.  It is our more immediate hope that we can utilize work in this project to make a Baxter robot aware of confusion in subjects with whom it is interacting.
 
 \section{Methodology}
-%\subsection{How to solve the problem?}
-We plan to formulate the problem at the highest level as a multimodal Bayes filter which returns a distribution on $P(confused | U)$ where $U$ is an evidence set of affective cues.  We plan initially focus on facial expression data, but given a relatively low accuracy reported from isolating modes (cite here) we feel it will be important to combine data from as many cues as possible.  Our corporae will be gathered by means of an automated quiz where a user sits down in front of a RealSense enabled computer and takes a short quiz of 10 questions designed to elicit both confusion and certainty.  After the quiz the subject will be asked to rate their experience with each question on a scale so as to establish a baseline from which we can derive ground truth.  Data from the RealSense device and end surveys will be recorded into a database during these quizzes.\\ \\
+In work establishing a framework for machine Emotional Intelligence, Picard et all \cite{picard2001toward} discuss factors which need to be considered when gathering data for experimental purposes.  For our experiment we are interested primarily in event-elicited emotions which arise unconsciously based on the situation.  To this end we have designed a quiz of five questions which are intended to provide a spectrum of data.  During the course of each question we collect a set of datapoints every 200 milliseconds using an Intel RealSense device which we have attached to a computer and pointed at the quizee.  This set includes 13 facial landmarks and 10 emotional features.  The facial landmarks are as follows: Left eyebrow raiser, Right eyebrow raiser, Left eyebrow lowerer, Right eyebrow lowerer, Mouth open, Mouth smile, Mouth kiss, Left eye closed, Right eye closed, Eyes turn left, Eyes turn right, Eyes turn up, Eyes turn down and their respective intensities from 0 to 100.  The emotional features are a set of 10 statistical features, each comprised of an intensity from 0 to 1 and an evidence rating ranging from -1 to 3.  These features include 7 specific emotions and 3 general valence ratings.  The 7 emotions are anger, contempt, disgust, fear, joy, sadness, and surprise and the valences are limited to positive, neutral and negative.  In addition to these 23 data points we included a single physiological sample in the form of a calculated heart rate.
+
+\subsection{Interrater agreement}
+To establish ground truth we used interrater agreement.  Three separate raters viewed videos of the quiz sessions and labelled intervals where they felt the quiz-taker was confused.  If two or more raters agreed that a quizee was confused during any given 200ms sample then that frame was considered confusion-positive; otherwise it was confusion-negative.
+
+\subsection{Confusion eliciting quiz}
+
+To capture the human facial and pulse response to mental state of confusion, we design a short quiz on a scale of questions from easy (less confusing) to hard (more confusing):
+
+\begin{enumerate}
+\item \emph{What is your name?}
+\begin{itemize}
+\item Use: Calibrate neutral features. 
+\end{itemize}
+ 
+\item \emph{Who is the President of the United States?}
+\begin{itemize}
+\item Answer: Barak Obama
+\item Use: Easy question measures non-confusing features. 
+\end{itemize}
+
+\item \emph{How many fingers am I holding up? (Hold up four)}
+\begin{itemize}
+\item Answer: Four
+\item Use: Easy question measures non-confusing features. 
+\end{itemize}
+
+\item \emph{I have two coins totaling 15 cents, one of which is not a nickle. What are the two coins?}
+\begin{itemize}
+\item Answer: A dime and a nickle
+\item Use: Medium question that might seem confusing at first but can be answered after some thinking or clarification. This question measures both confusing and non-confusing features, as well as the transition.
+\end{itemize}
+
+\item \emph{Has anyone really been far enough and decided to use even what they look like?}
+\begin{itemize}
+\item Answer: Nonsense
+\item Use: Intentionally confusing question to measure confusing features.
+\end{itemize}
+
+\item \emph{There’s a dead man in a room surrounded by 53 bicycles. Why is he dead?}
+\begin{itemize}
+\item Answer: He was caught cheating at cards.
+\item Use: Intentionally confusing riddle to measure confusing features.
+\end{itemize}
+
+\item \emph{Make a face of confusion.}
+\item \emph{Make a face of understanding.}
+\begin{itemize}
+\item Use: Extra features of acted features of confusion and non-confusion (understanding). 
+\end{itemize}
+\end{enumerate}
+
+\subsection{Dataset}
+
+The dataset consists of two components to the confusion quiz questions in 3.1: 
+\begin{enumerate}
+\item The video of the face and upper body of the test subject during the quiz process.
+\begin{itemize}
+\item Three authors independently annotate the video frames by label of confusion and non-confusion. 
+\item The intersection of annotated confusion frames forms the \begin{bf}baseline\end{bf} for confusion evaluation and inference.
+\end{itemize}
+
+\item The features detected by Intel RealSense built-in face tracking and emotion modules at each 200 millisecond (ms) frame:
+\begin{itemize}
+\item Pulse [in beats per minute (BPM)]
+\item Facial landmarks [on a scale of 0 to 100]: 
+\begin{itemize}
+\item Brow: Raise left [AU1,2], Raise right [AU1,2], Lower left [AU4], Lower right [AU4]
+\item Mouth: Smile, Kiss, Open
+\item Head: Turn left [AU51], Turn right [AU52], Up [AU53], Down [AU54], Tilt left [AU/M55], Tilt right [AU/M56]
+\item Eyes: Turn left [AU/M61], Turn right [AU/M62], Up [AU63], Down [AU64]
+\end{itemize}
+
+\item Emotions [on a scale of 0 to 1 with evidence ratings from -1 to 3]: 
+\begin{itemize}
+\item Primary: Anger, Contempt, Disgust, Fear, Joy, Sadness, Surprise
+\item Sentiments: Negative, Positive, Neutral
+\end{itemize}
+\end{itemize}
+\end{enumerate}
+
+Some facial landmarks are synonymous with action units as defined by Tian et al \cite{tian2001recognizing}. Those have been denoted with the tag [AU]. We could also consider the initial frames of neutral face as AU0. Because mouth features do not overlap with AU definitions, we only use the feature names in our method. However, we the AU notations here for future use and comparison with other facial action and emotion research.  Also, according to EMFACS (Emotional Facial Action Coding System) and FACSAID (Facial Action Coding System Affect Interpretation Dictionary), the seven primary emotions can be detected based on some combinations of action units.  It is our current understanding that these methods are used by the Intel RealSense in encoding values for emotional evidence and intensity.
+
+Datasets were collected in the same format under but under two separate scenarios: 
+\begin{enumerate}
+\item Conversational: we asked the quiz questions to human subjects.
+\item Computerized test: the human subjects took the quiz on computer.
+\end{enumerate}
+
+\subsection{Naive Bayes}
+Given our task was simply to label frames either confusion-positive or confusion-negative we felt a simple Naive Bayes classifier to be a worthy attempt.  To that end we formulated a 'scaled' bayes classifier which uses partial counts scaled by intensity/evidence ratings for both parameter estimation and classification.  We detail this process below.
+
+Consider the features conditionally independent and frames taken at every 200 ms timestamp independent inputs. We formulate the Naive Bayes classifier for confusion mental states: given the feature vector $X = {x_1, ... , x_{28}}$ consisting of the 28 features described in Section 3.2.2, we compute $P(\text{confusion}|X)$ by Bayes Rule:
+\begin{align}
+P(\text{confusion}|X) &= \frac{P(\text{confusion}) P(X|\text{confusion}) }{P(X)} \\
+&\propto P(\text{confusion}) P(X|\text{confusion})
+\end{align}
+Assuming conditional independence for features in $X$, 
+\begin{align}
+P(\text{confusion}|X) &\propto P(\text{confusion}) \prod_{i=1}^{28} P(x_i | \text{confusion})
+\end{align}
+where
+\begin{align}
+P(\text{confusion}) &= \frac{ \text{intensity scaled count of confusion-positive frames} }{ \text{total number of frames * set of feature intensities} } \\
+P(x_i|\text{confusion}) &= \frac{ \text{intensity scaled count of feature $x_i$ in confusion class} }{ \text{total number of features in confusion class * feature intensity} } 
+\end{align}
+
+Note that the asterisks above are dot products.  Also for the counting of emotional features we only included the feature data from a frame if the evidence rating was greater than 0.
+
+We took take questions $1,5,7,8$ of Section 3.1 as the training data to compute $P(\text{confusion}|X)$ and evaluate the performance on questions $2,3,4,6$ as testing data. 
+
 
 \section{Results}
-Data from testing will be processed through the Bayes filter with different combinations of modes active.  This will be compared against our collected ground truth data for each subject as a way of determining accuracy of the results.
+\subsection{Baseline}
+We form the baseline of confusion by taking the intersection of three independent sets of annotated frames. The annotation is based on the interrater agreement method established previously.  The intersection of this baseline set with the set of all frames represents the set of all confusion-positive frames.
 
-(table here)
+We first attempted classification using the full set of all features, then isolated subsets of the features by either eliminating features intuitively or randomly.
 
-%\begin{enumerate}
-%\item Examine existing corporae to determine features which are representative of a confused state.
-%\item Setup recording on I
-%\item Solve the decision problem using Bayes filter and neural network.
-%\item Test the model by user input using data set.
-%\item Adjust and formalize the model based on results.
-%\end{enumerate}
+%\begin{center} Table: Annotated frames labelled as confusion in our baseline
+%\begin{tabular}{ c | c }
+%Subject & Confusion frames \\ \hline
+%DK &  \\ \hline
+%John & \\ \hline
+%Nakul &  \\ \hline
+%Paige &  \\ 
+%\end{tabular}
+%\end{center}
 
-%\subsection{How to know if we have solved the problem?}
-%\emph{Milestone 1.} Successful detection of user facial expression using Intel RealSense camera and based on that, inference of emotion.
-%\emph{Milestone 2.} Formalized POMDP model that outputs decision from input user expression and inferred emotion.
-%\emph{Milestone 3.} Extensive testing (hoping) to justify the performance of Intel RealSense emtion inference, our POMDP model and the output decision.
-%\emph{Final results.} We have solved the problem if testing indicates that we can make satisfiable decision given user input facial expression and commands. 
-%\section{Related Work}
+\subsection{Naive Bayes}
+\begin{center} Table: Results for scaled Naive Bayes given subsets of data \\
+Unless otherwise stated the threshold for the posterior probability is .50
 
-\section{Related Work}
-Kapoor et al \cite{kapoor2001towards} describes a theoretic framework used to describe affective states.  Our work borrows from this idea but is generalized rather than focused on the activity of learning.
-
-\newpage
-\section{Schedule}
-
-\begin{center}
-\begin{tabular}{ c | c }
-\bf{Date} & \bf{TODO} \\ \hline
-2/26 - 3/5 & Finalize theoretic framework and experiment design\\
-3/6 - 3/12 & Program initial models and test with false data\\
-3/13 - 3/19 & Design interview script and post interview survey, find interview subjects and schedule\\
-3/20 - 3/26 & Have at least 10 subjects interviewed with collected data or move to backup plan\\
-3/27 - 4/2 & Test data on models and compare\\
-4/2 - 4/7 & Checkpoint presentation\\
-4/8 - 4/14 & Collect more data as needed; tweak models\\
-4/15 - 4/21 & Prepare results\\
-4/23 - 4/28 & Final presentation
+\begin{tabular}{ c | c | c | c | c }
+Feature Subset & Precision & Recall & Accuracy & Fscore\\ \hline
+All features & 0.208 & 0.362 & 0.495 & 0.265 \\ \hline
+All features (.70 threshold) & 0.218 & 0.166 & 0.641 & 0.188 \\ \hline
+All features (.80 threshold) & 0.251 & 0.126 & 0.686 & 0.168 \\ \hline
+All features (.90 threshold) & 0.300 & 0.089 & 0.719 & 0.138 \\ \hline
+Without pulse & 0.226 & 0.272 & 0.583 & 0.247 \\ \hline
+Random subset & 0.233 & 0.150 & 0.663 & 0.182 \\ \hline
+Without emotional features & 0.198 & 0.084 & 0.684 & 0.118 \\ \hline
 \end{tabular}
+
 \end{center}
 
-\section{Responsibilities}
-Everyone will have involvement with all parts of the project.  We will assign work based on what is needed to meet milestones.
+\subsection{Discussion}
+Our intial attempt at a classifier yielded underwhelming results.  We noted that as we increased the threshold generally accuracy increased as a result of more frames being classified as confusion-negative.  This is likely because confusion positive frames constituted a small set at best.
 
+%\section{Schedule}
+%
+%\begin{center}
+%\begin{tabular}{ l | p{8cm} }
+%\bf{Date} & \bf{TODO} \\ \hline
+%2/26 - 3/5 & Finalize theoretic framework and experiment design\\
+%3/6 - 3/12 & Program initial models and test with false data\\
+%3/13 - 3/19 & Design interview script and post interview survey. Find interview subjects and schedule\\
+%3/20 - 3/26 & Have at least 10 subjects interviewed with collected data or move to backup plan\\
+%3/27 - 4/2 & Test data on models and compare\\
+%4/2 - 4/7 & Checkpoint presentation\\
+%4/8 - 4/14 & Collect more data as needed. Adjust and formalize the model based on results\\
+%4/15 - 4/21 & Prepare results\\
+%4/23 - 4/28 & Final presentation
+%\end{tabular}
+%\end{center}
+
+\section{Tables and Figures}
+%\includegraphics[scale=0.8]{sampleXML.png}
+\begin{center} Figure 1: Sample dataset taken at one 200 ms timestamp \end{center}
 %\section{Bibliography}
 \bibliographystyle{plain}
 \bibliography{final_proj}
